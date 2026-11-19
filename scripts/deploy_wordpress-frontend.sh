@@ -35,7 +35,7 @@ wp config create \
 
 # Instalamos WordPress
 wp core install \
-  --url=$LETSENCRYPT_DOMAIN \
+  --url=$LETS_ENCRYPT_DOMAIN \
   --title="IAW" \
   --admin_user=$WORDPRESS_ADMIN_USER \
   --admin_password=$WORDPRESS_ADMIN_PASSWORD \
@@ -43,11 +43,25 @@ wp core install \
   --path=/var/www/html \
   --allow-root  
 
+  #Configuramos los enlaces permanentes
+  wp rewrite structure '/%postname%/' \
+  --path=/var/www/html \
+  --allow-root
+
 # Instalamos el plugin WPS Hide Login
 wp plugin install wps-hide-login --activate --path=/var/www/html --allow-root
 
 # Actualizamos la URL de inicio de sesión de WordPress
 wp option update whl_page "$WORDPRESS_LOGIN_URL" --path=/var/www/html --allow-root
+
+#Instalar un theme
+wp theme install saaslauncher --activate --path=/var/www/html --allow-root
+
+#Instalar un plugin
+ wp plugin install resolai-ai-customer-support --activate --path=/var/www/html/ --allow-root
+
+#Copiamos el archivo .htaccess
+cp ../.htaccess/.htaccess /var/www/html/
 
 # Asignamos los permisos correctos a los archivos de WordPress
 chown -R www-data:www-data /var/www/html
